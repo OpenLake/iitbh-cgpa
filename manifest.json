@@ -1,0 +1,14 @@
+{
+	"name": "IITBh. CGPA",
+	"version": "1.0",
+	"description": "Calculate CGPA directly from AIMS Portal",
+	"permissions": ["activeTab", "declarativeContent"],
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"page_action": {
+		"default_popup": "popup.html"
+	},
+	"manifest_version": 2
+}
