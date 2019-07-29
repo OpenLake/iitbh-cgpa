@@ -1,6 +1,11 @@
 function calculateCGPA() {
-	let gradeNodes = document.querySelectorAll('span.col8.col[style="width:69px"');
-	let creditNodes = document.querySelectorAll('span.col3.col[style="margin-left: 9px;"]');
+	let sem=document.querySelectorAll('.subCnt');
+	let cgpas=[];
+	sem.forEach(semester=>
+	{
+		
+		let gradeNodes =semester.querySelectorAll('span.col8.col[style="width:69px"');
+	let creditNodes = semester.querySelectorAll('span.col3.col[style="margin-left: 9px;"]');
 
 	let grades = []; //albhabet grades
 	let gradePoints = [];
@@ -21,6 +26,8 @@ function calculateCGPA() {
 		Satisfactory: 0,
 		S: 0
 	};
+
+
 
 	gradeNodes.forEach(node => {
 		grades.push(node.textContent.trim());
@@ -43,7 +50,19 @@ function calculateCGPA() {
 
 	cgpa /= creditSum;
 
-	return cgpa;
+
+
+
+		cgpas.push(cgpa);
+
+
+
+
+	});
+	console.log(cgpas);
+	
+	return cgpas;
+
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
