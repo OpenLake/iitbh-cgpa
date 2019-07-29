@@ -19,7 +19,8 @@ function calculateCGPA() {
 		FR: 0,
 		I: 0,
 		Satisfactory: 0,
-		S: 0
+		S: 0,
+		'': 0
 	};
 
 	gradeNodes.forEach(node => {
