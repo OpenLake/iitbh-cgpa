@@ -37,7 +37,7 @@ function calculateCGPA() {
 
 	gradePoints.forEach((gradePoint, i) => {
 		cgpa += gradePoint * credits[i];
-		if (grades[i].toLowerCase() !== 'satisfactory') {
+		if (!['satisfactory', '', 's'].includes(grades[i].toLowerCase())) {
 			creditSum += credits[i];
 		}
 	});
