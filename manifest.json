@@ -1,7 +1,7 @@
 {
-	"name": "IITBh. CGPA",
+	"name": "IITBh CGPA",
 	"version": "1.0",
-	"description": "Calculate CGPA directly from AIMS Portal",
+	"description": "Calculate CGPA directly from AIMS Portal. Click on the extension logo when on AIMS portal's courses page to see your cgpa",
 	"permissions": ["activeTab", "declarativeContent"],
 	"background": {
 		"scripts": ["background.js"],

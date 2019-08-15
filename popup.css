@@ -1,0 +1,23 @@
+body {
+	width: max-content;
+	font-size: 22px;
+	font-family: monospace;
+
+	--dark: rgb(51, 51, 51);
+}
+
+@media screen and (prefers-color-scheme: light), screen and (prefers-color-scheme: no-preference) {
+	/*light theme*/
+	body {
+		color: var(--dark);
+		background-color: white;
+	}
+}
+
+@media screen and (prefers-color-scheme: dark) {
+	/*dark theme*/
+	body {
+		color: white;
+		background-color: var(--dark);
+	}
+}
