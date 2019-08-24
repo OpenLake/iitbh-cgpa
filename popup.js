@@ -1,38 +1,24 @@
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
-	chrome.tabs.executeScript(tabs[0].id, {
-		file: 'contentscript.js'
-	}, function () {
-
-			chrome.tabs.sendMessage(tabs[0].id, 'cgpa', function (response) {
+chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+	chrome.tabs.executeScript(
+		tabs[0].id,
+		{
+			file: 'contentscript.js'
+		},
+		function() {
+			chrome.tabs.sendMessage(tabs[0].id, 'grade-data', function(response) {
 				if (response) {
-					var sum=0;
-					var parent = document.getElementById('cgpas');
-					var arr=response.cgpa;
-					var n=arr.length;
-					for(var i=n-1;i>=0;i--)
-					{
-						var element=arr[i];
-						var child = document.createElement('div');
-						sum=sum+element;
-						child.textContent = "Semester " +(n-i).toString() +": " + element;
-						parent.appendChild(child);
-
-
-					}
-					var parent = document.getElementById('cgpas');
-					var child = document.createElement('div');
-					console.log(sum);
-					child.textContent = "Total CGPA : " + (sum/n);
-					parent.appendChild(child);
-
-
+					let displayElement = document.querySelector('#cgpas');
+					displayElement.innerHTML =
+						`CGPA: ${response.cgpa}<br>` +
+						response.sgpas.reduce(
+							(result, num, index) => `${result}Sem ${index + 1}: ${num}<br>`,
+							''
+						);
+					console.log(response);
+				} else {
+					document.getElementById('cgpas').textContent = 'Some error occured';
 				}
-				else {
-					document.getElementById('cgpa').textContent = 'Some error occured';
-				}
-
 			});
-
-		});
+		}
+	);
 });
