@@ -9,12 +9,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 				if (response) {
 					let displayElement = document.querySelector('#cgpas');
 					displayElement.innerHTML =
-						`CGPA: ${response.cgpa}<br><br>SGPAs:<br>` +
+						`CGPA: ${response.cgpa}<br><br>SGPAs<br>` +
 						response.sgpas.reduce(
 							(result, num, index) => `${result}Sem ${index + 1}: ${num}<br>`,
 							''
 						);
-					console.log(response);
 				} else {
 					document.getElementById('cgpas').textContent = 'Some error occured';
 				}

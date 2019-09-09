@@ -54,7 +54,6 @@ function calculateCGPA() {
 		result.sgpas.unshift(sgpa ? Math.round(sgpa * 100) / 100 : 0);
 	});
 	result.cgpa = Math.round((result.cgpa / totalCredit) * 100) / 100;
-	console.log(result);
 
 	return result;
 }
