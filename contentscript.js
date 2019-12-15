@@ -30,6 +30,7 @@ function calculateCGPA() {
 			I: 0,
 			Satisfactory: 0,
 			S: 0,
+			'S S': 0,
 			'': 0
 		};
 
@@ -45,7 +46,7 @@ function calculateCGPA() {
 		gradePoints.forEach((gradePoint, i) => {
 			result.cgpa += gradePoint * credits[i];
 			sgpa += gradePoint * credits[i];
-			if (!['satisfactory', '', 's'].includes(grades[i].toLowerCase())) {
+			if (!['satisfactory', '', 's', 's s'].includes(grades[i].toLowerCase())) {
 				totalCredit += credits[i];
 				semesterCredit += credits[i];
 			}
