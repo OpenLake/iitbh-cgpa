@@ -2,7 +2,7 @@ function calculateCGPA() {
 	let sem = document.querySelectorAll('.subCnt');
 	let result = {
 		cgpa: 0,
-		sgpas: []
+		sgpas: [],
 	};
 	let totalCredit = 0;
 
@@ -31,12 +31,12 @@ function calculateCGPA() {
 			Satisfactory: 0,
 			S: 0,
 			'S S': 0,
-			'': 0
+			'': 0,
 		};
 
 		gradeNodes.forEach(node => {
 			grades.push(node.textContent.trim());
-			gradePoints.push(gradePointMap[node.textContent.trim()]);
+			gradePoints.push(gradePointMap[node.textContent.trim()] || 0);
 		});
 
 		creditNodes.forEach(node => {
@@ -46,7 +46,7 @@ function calculateCGPA() {
 		gradePoints.forEach((gradePoint, i) => {
 			result.cgpa += gradePoint * credits[i];
 			sgpa += gradePoint * credits[i];
-			if (!['satisfactory', '', 's', 's s'].includes(grades[i].toLowerCase())) {
+			if (!['satisfactory', '', 's', 's s', 's s s s'].includes(grades[i].toLowerCase())) {
 				totalCredit += credits[i];
 				semesterCredit += credits[i];
 			}
