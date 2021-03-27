@@ -1,68 +1,71 @@
+const gradePointMap = {
+	'A+': 10,
+	A: 10,
+	'A-': 9,
+	B: 8,
+	'B-': 7,
+	C: 6,
+	'C-': 5,
+	D: 4,
+	FS: 0,
+	FR: 0,
+	I: 0,
+	'': 0,
+};
+
+const round = n => Math.round(n * 100) / 100;
+
+const getColumnText = (node, column) =>
+	node.querySelector(`.col${column}`).textContent.trim();
+
+const isGraded = course =>
+	course.electiveType.toLowerCase() !== 'additional activity';
+
+const parseCourseNode = node => ({
+	credits: parseFloat(getColumnText(node, 3)),
+	electiveType: getColumnText(node, 5),
+	grade: getColumnText(node, 8),
+});
+
+const parseSemesterNode = node =>
+	[
+		...node.querySelectorAll(
+			'.hierarchyLi.dataLi.tab_body_bg:not(.hierarchyHdr)',
+		),
+	]
+		.map(parseCourseNode)
+		.filter(isGraded);
+
 function calculateCGPA() {
-	let sem = document.querySelectorAll('.subCnt');
-	let result = {
-		cgpa: 0,
-		sgpas: [],
-	};
-	let totalCredit = 0;
+	const sem = document.querySelectorAll('.subCnt'),
+		sgpas = [];
+	let totalCredit = 0,
+		totalPoints = 0;
 
 	sem.forEach(semester => {
-		let gradeNodes = semester.querySelectorAll('span.col8.col[style="width:69px"');
-		let creditNodes = semester.querySelectorAll('span.col3.col[style="margin-left: 9px;"]');
+		const courses = parseSemesterNode(semester),
+			isComplete = courses.every(course => course.grade),
+			semesterCredit = courses.reduce(
+				(sum, course) => sum + (course.grade ? course.credits : 0),
+				0,
+			),
+			semesterPoints = courses.reduce(
+				(sum, course) => sum + gradePointMap[course.grade] * course.credits,
+				0,
+			),
+			sgpa = round(semesterPoints / semesterCredit);
 
-		let grades = []; //albhabet grades
-		let gradePoints = [];
-		let credits = [];
-		let semesterCredit = 0;
-		let sgpa = 0;
-
-		const gradePointMap = {
-			'A+': 10,
-			A: 10,
-			'A-': 9,
-			B: 8,
-			'B-': 7,
-			C: 6,
-			'C-': 5,
-			D: 4,
-			FS: 0,
-			FR: 0,
-			I: 0,
-			Satisfactory: 0,
-			S: 0,
-			'S S': 0,
-			'S S S': 0,
-			'S S S S': 0,
-			'': 0,
-		};
-
-		gradeNodes.forEach(node => {
-			grades.push(node.textContent.trim());
-			gradePoints.push(gradePointMap[node.textContent.trim()] || 0);
-		});
-
-		creditNodes.forEach(node => {
-			credits.push(parseFloat(node.textContent.trim()));
-		});
-
-		gradePoints.forEach((gradePoint, i) => {
-			result.cgpa += gradePoint * credits[i];
-			sgpa += gradePoint * credits[i];
-			if (!['satisfactory', '', 's', 's s', 's s s', 's s s s'].includes(grades[i].toLowerCase())) {
-				totalCredit += credits[i];
-				semesterCredit += credits[i];
-			}
-		});
-		sgpa /= semesterCredit;
-		result.sgpas.unshift(sgpa ? Math.round(sgpa * 100) / 100 : 0);
+		if (isComplete) {
+			totalCredit += semesterCredit;
+			totalPoints += semesterPoints;
+		}
+		sgpas.unshift(sgpa);
 	});
-	result.cgpa = Math.round((result.cgpa / totalCredit) * 100) / 100;
 
-	return result;
+	const cgpa = round(totalPoints / totalCredit);
+	return { cgpa, sgpas };
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if (request === 'grade-data') {
-		sendResponse(calculateCGPA());
-	}
+browser.runtime.onMessage.addListener(async request => {
+	if (request === 'grade-data') return calculateCGPA();
 });

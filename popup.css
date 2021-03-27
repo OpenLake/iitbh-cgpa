@@ -6,7 +6,8 @@ body {
 	--dark: rgb(51, 51, 51);
 }
 
-@media screen and (prefers-color-scheme: light), screen and (prefers-color-scheme: no-preference) {
+@media screen and (prefers-color-scheme: light),
+	screen and (prefers-color-scheme: no-preference) {
 	/*light theme*/
 	body {
 		color: var(--dark);
