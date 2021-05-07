@@ -22,10 +22,41 @@ const isGraded = course =>
 	course.electiveType.toLowerCase() !== 'additional activity';
 
 const parseCourseNode = node => ({
+	name: getColumnText(node, 2),
 	credits: parseFloat(getColumnText(node, 3)),
 	electiveType: getColumnText(node, 5),
 	grade: getColumnText(node, 8),
 });
+
+let courseGrade = {};
+const fillCourseGradesMap = courses => courses.forEach(
+	course => courseGrade[course.name] ?? (courseGrade[course.name] = course.grade)
+); // Store latest grades for each course
+
+const parseCourses = (semesters) => {
+	const sems = [];
+	semesters.forEach(semester => {
+		const courses = parseSemesterNode(semester);
+		fillCourseGradesMap(courses); // Store final(latest) grade for each course
+		sems.push(courses);
+	});
+	sems.reverse();
+	return sems;
+}
+
+const sanitizeCourses = (sems) => {
+	let coursesSeen = new Set();
+	let sems2 = [];
+	sems.forEach(courses => {
+		const sanitizedCourses = courses
+			.map(course => coursesSeen.has(course.name) ? {} :
+				(coursesSeen.add(course.name) && { ...course, grade: courseGrade[course.name] })
+			) // Replace 
+			.filter(course => !!course.name);
+		sems2.push(sanitizedCourses);
+	});
+	return sems2;
+}
 
 const parseSemesterNode = node =>
 	[
@@ -37,14 +68,18 @@ const parseSemesterNode = node =>
 		.filter(isGraded);
 
 function calculateCGPA() {
-	const sem = document.querySelectorAll('.subCnt'),
+	const semesters = document.querySelectorAll('.subCnt'),
 		sgpas = [];
 	let totalCredit = 0,
 		totalPoints = 0;
 
-	sem.forEach(semester => {
-		const courses = parseSemesterNode(semester),
-			isComplete = courses.every(course => course.grade),
+	courseGrade = {};
+	const sems = parseCourses(semesters);
+	console.log(courseGrade); // Must be populated by now
+	const data = sanitizeCourses(sems);
+	console.log(data); // This data will be used for calcuations
+	data.forEach(courses => {
+		isComplete = courses.every(course => course.grade),
 			semesterCredit = courses.reduce(
 				(sum, course) => sum + (course.grade ? course.credits : 0),
 				0,
