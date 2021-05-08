@@ -22,10 +22,9 @@ function render(response) {
 		return;
 	}
 
-
 	displayElement.innerHTML =
 		`CGPA: ${response.cgpa}<br><br>SGPAs<br>` +
 		response.sgpas
-			.map((sgpa, index) => `Sem ${response.sgpas.length - index}: ${sgpa}`)
+			.map((sgpa, index) => `Sem ${index + 1}: ${sgpa}`)
 			.join('<br>');
 }
