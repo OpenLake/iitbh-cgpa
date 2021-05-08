@@ -19,7 +19,9 @@ const getColumnText = (node, column) =>
 	node.querySelector(`.col${column}`).textContent.trim();
 
 const isGraded = course =>
-	course.electiveType.toLowerCase() !== 'additional activity';
+	!['additional activity', 'thesis / candidacy'].includes(
+		course.electiveType.toLowerCase(),
+	);
 
 const parseCourseNode = node => ({
 	credits: parseFloat(getColumnText(node, 3)),
