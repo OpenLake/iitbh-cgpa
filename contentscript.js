@@ -21,9 +21,9 @@ const getColumnText = (node, column) =>
 	node.querySelector(`.col${column}`).textContent.trim();
 
 const isGraded = course =>
-	!['additional activity', 'thesis / candidacy'].includes(
-		course.electiveType.toLowerCase(),
-	);
+	course.electiveType.toLowerCase() !== 'additional activity' &&
+	!course.code.startsWith('AA') &&
+	!course.code.startsWith('EP');
 
 const parseCourse = node => ({
 	code: getColumnText(node, 1),
