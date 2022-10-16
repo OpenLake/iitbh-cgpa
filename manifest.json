@@ -1,9 +1,9 @@
 {
 	"name": "IITBh CGPA",
-	"version": "2.3",
+	"version": "2.4",
 	"description": "Calculate CGPA directly from AIMS Portal. Click on the extension logo when on AIMS portal's courses page to see your CGPA.",
 	"permissions": ["activeTab", "declarativeContent"],
-	"page_action": {
+	"action": {
 		"default_popup": "popup.html",
 		"show_matches": [
 			"*://aimsportal.iitbhilai.ac.in/iitbhAims/courseReg/myCrsHistoryPage*"
@@ -16,8 +16,7 @@
 		"default_title": "CGPA"
 	},
 	"background": {
-		"scripts": ["browser-polyfill.js", "background.js"],
-		"persistent": false
+		"service_worker": "worker-wrapper.js"
 	},
 	"content_scripts": [
 		{
@@ -32,5 +31,5 @@
 		"32": "images/32x32.png",
 		"128": "images/128x128.png"
 	},
-	"manifest_version": 2
+	"manifest_version": 3
 }
