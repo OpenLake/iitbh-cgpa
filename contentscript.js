@@ -85,9 +85,20 @@ function calculateCGPA() {
 				0,
 			),
 			semesterPoints = semester.reduce(
-				(sum, course) => sum + gradePointMap[course.grade] * course.credits,
-				0,
-			),
+				(sum, course) => {
+					const grades = course.grade.trim().split(' ');
+					let points = 0;
+					if(grades.length === 1) {
+						return sum + gradePointMap[grades[0]] * course.credits;
+					}
+
+					for (let i = 0; i < grades.length; i++) {
+								points += gradePointMap[grades[i]] * 6;	
+					}
+					return sum + points;
+				},0,
+			)
+			,
 			sgpa = round(semesterPoints / semesterCredit);
 
 		if (isComplete) {
