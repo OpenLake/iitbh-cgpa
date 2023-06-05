@@ -117,4 +117,3 @@ function calculateCGPA() {
 browser.runtime.onMessage.addListener(async request => {
 	if (request === 'grade-data') return calculateCGPA();
 });
-console.log(gradeArray);
