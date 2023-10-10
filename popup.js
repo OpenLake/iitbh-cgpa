@@ -30,11 +30,11 @@ function render(response) {
 
 	const credsDisplayElement=document.querySelector('.creditsComp');
 	var courseType=new Array(5);
-	courseType[0]="IC";
-	courseType[1]="PC";
-	courseType[2]="DE";
-	courseType[3]="OE";
-	courseType[4]="CALA";
-
-	credsDisplayElement.innerHTML=response.credsTypeCompleted.map((creds,index)=>`${courseType[index]}:${creds}`).join('<br>');
+	courseType[0]=["IC",60];
+	courseType[1]=["PC",60];
+	courseType[2]=["DE",60];
+	courseType[3]=["OE",30];
+	courseType[4]=["CALA",30];
+	
+	credsDisplayElement.innerHTML=response.credsTypeCompleted.map((creds,index)=>`${courseType[index][0]}:${creds}/${courseType[index][1]}`).join('<br>');
 }
