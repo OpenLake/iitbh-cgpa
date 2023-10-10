@@ -27,4 +27,14 @@ function render(response) {
 		response.sgpas
 			.map((sgpa, index) => `Sem ${index + 1}: ${sgpa}`)
 			.join('<br>');
+
+	const credsDisplayElement=document.querySelector('.creditsComp');
+	var courseType=new Array(5);
+	courseType[0]="IC";
+	courseType[1]="PC";
+	courseType[2]="DE";
+	courseType[3]="OE";
+	courseType[4]="CALA";
+
+	credsDisplayElement.innerHTML=response.credsTypeCompleted.map((creds,index)=>`${courseType[index]}:${creds}`).join('<br>');
 }
