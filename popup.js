@@ -36,5 +36,5 @@ function render(response) {
 	courseType[3]=["OE",30];
 	courseType[4]=["CALA",30];
 	
-	credsDisplayElement.innerHTML=response.credsTypeCompleted.map((creds,index)=>`${courseType[index][0]}:${creds}/${courseType[index][1]}`).join('<br>');
+	credsDisplayElement.innerHTML=`Enrolled Credits<br>`+response.credsTypeCompleted.map((creds,index)=>`${courseType[index][0]}:${creds}/${courseType[index][1]}`).join('<br>');
 }
