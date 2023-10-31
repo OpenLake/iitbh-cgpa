@@ -407,7 +407,7 @@
             "maxArgs": 2
           }
         },
-        "pageAction": {
+        "Action": {
           "getPopup": {
             "minArgs": 1,
             "maxArgs": 1
@@ -1235,4 +1235,4 @@
     module.exports = browser;
   }
 });
-//# sourceMappingURL=browser-polyfill.js.map
+// sourceMappingURL=browser-polyfill.js.map

@@ -82,7 +82,20 @@ function calculateCGPA() {
 	const semesters = sanitizeSemesters(parseSemesterList(semesterNodes));
 
 	// Print processed data for programmers to inspect
-	console.log(semesters);
+	// console.log(semesters);
+
+	const typeMap = {
+		"Institute Core": 0,
+		"Professional Core": 1,
+		"Departmental elective": 2,
+		"Open Elective": 3,
+		"Creative Arts / Liberal Arts": 4
+	  };
+
+	const credTypeLength=5;
+	var credsTypeCompleted=new Array(credTypeLength).fill(0);
+
+	console.log(credsTypeCompleted);
 
 	semesters.forEach(semester => {
 		const isComplete = semester.every(course => course.grade),
@@ -96,7 +109,8 @@ function calculateCGPA() {
 				gradeArray= semester[i].grade.split(' ');
 				var thesisSum= gradeArray.reduce((sum,grade)=>sum+gradePointMap[grade]*6,0);
 				semesterPoints+=thesisSum;
-			}else{
+			}else{				  
+				credsTypeCompleted[typeMap[semester[i].electiveType]] += semester[i].credits;
 				semesterPoints+=gradePointMap[semester[i].grade]*semester[i].credits;
 			}
 		}
@@ -107,13 +121,17 @@ function calculateCGPA() {
 		sgpa = round(semesterPoints / semesterCredit);
 		sgpas.unshift(sgpa);
 	});
+
 	const cgpa = round(totalPoints / totalCredit);
 
-	const response = { cgpa, sgpas };
+	const response = { cgpa, sgpas , credsTypeCompleted};
 	console.log(response);
+	// console.log(credsTypeCompleted);
+	
 	return response;
 }
 
 browser.runtime.onMessage.addListener(async request => {
 	if (request === 'grade-data') return calculateCGPA();
 });
+

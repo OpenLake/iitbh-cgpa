@@ -7,7 +7,7 @@ const gradesPageRule = {
 			},
 		}),
 	],
-	actions: [new browser.declarativeContent.ShowPageAction()],
+	actions: [new browser.declarativeContent.ShowAction()],
 };
 
 browser.runtime.onInstalled.addListener(function () {
