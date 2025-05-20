@@ -3,17 +3,20 @@ const gradePointMap = {
 	'A+': 10,
 	'A': 10,
 	'A-': 9,
-	B: 8,
+	'B': 8,
 	'B-': 7,
-	C: 6,
+	'C': 6,
 	'C-': 5,
-	D: 4,
-	FS: 0,
-	FR: 0,
-	F: 0,
-	I: 0,
+	'D': 4,
+	'FS': 0,
+	'FR': 0,
+	'F': 0,
+	'I': 0,
 	' ': 0,
-	'':0
+	'':0,
+	'S':0,
+	'S S':0,
+	'SS':0
 };
 var gradeArray=[];
 const round = n => Math.round(n * 100) / 100;
@@ -23,6 +26,8 @@ const getColumnText = (node, column) =>
 
 const isGraded = course =>
 	course.electiveType.toLowerCase() !== 'additional activity' &&
+	course.electiveType.toLowerCase() !== 'non-graded' &&
+	course.electiveType.toLowerCase() !== 'audit' &&
 	!course.code.startsWith('AA') &&
 	!course.code.startsWith('EP');
 
