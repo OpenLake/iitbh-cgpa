@@ -15,6 +15,7 @@ const gradePointMap = {
 	' ': 0,
 	'':0,
 	'S':0,
+	'S S':0,
 	'SS':0
 };
 var gradeArray=[];
@@ -26,6 +27,7 @@ const getColumnText = (node, column) =>
 const isGraded = course =>
 	course.electiveType.toLowerCase() !== 'additional activity' &&
 	course.electiveType.toLowerCase() !== 'non-graded' &&
+	course.electiveType.toLowerCase() !== 'audit' &&
 	!course.code.startsWith('AA') &&
 	!course.code.startsWith('EP');
 
