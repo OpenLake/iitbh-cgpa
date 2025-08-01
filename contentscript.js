@@ -97,10 +97,11 @@ function calculateCGPA() {
 		"Creative Arts / Liberal Arts": 4
 	  };
 
-	const credTypeLength=5;
-	var credsTypeCompleted=new Array(credTypeLength).fill(0);
+	const credTypeLength = 5;
+	var credsTypeCompleted = new Array(credTypeLength).fill(0);
+	var credsTypeTotal = new Array(credTypeLength).fill(0);
 
-	console.log(credsTypeCompleted);
+	console.log('Credits tracking initialized:', { credsTypeCompleted, credsTypeTotal });
 
 	semesters.forEach(semester => {
 		const isComplete = semester.every(course => course.grade),
@@ -114,8 +115,16 @@ function calculateCGPA() {
 				gradeArray= semester[i].grade.split(' ');
 				var thesisSum= gradeArray.reduce((sum,grade)=>sum+gradePointMap[grade]*6,0);
 				semesterPoints+=thesisSum;
-			}else{				  
-				credsTypeCompleted[typeMap[semester[i].electiveType]] += semester[i].credits;
+			}else{
+				const courseTypeIndex = typeMap[semester[i].electiveType];
+				if (courseTypeIndex !== undefined) {
+					
+					credsTypeTotal[courseTypeIndex] += semester[i].credits;
+					
+					if (semester[i].grade && gradePointMap[semester[i].grade] !== undefined) {
+						credsTypeCompleted[courseTypeIndex] += semester[i].credits;
+					}
+				}
 				semesterPoints+=gradePointMap[semester[i].grade]*semester[i].credits;
 			}
 		}
@@ -129,9 +138,8 @@ function calculateCGPA() {
 
 	const cgpa = round(totalPoints / totalCredit);
 
-	const response = { cgpa, sgpas , credsTypeCompleted};
-	console.log(response);
-	// console.log(credsTypeCompleted);
+	const response = { cgpa, sgpas, credsTypeCompleted, credsTypeTotal };
+	console.log('CGPA calculation complete:', response);
 	
 	return response;
 }
