@@ -18,7 +18,6 @@ const gradePointMap = {
 	'S S':0,
 	'SS':0
 };
-var gradeArray=[];
 const round = n => Math.round(n * 100) / 100;
 
 const getColumnText = (node, column) =>
@@ -48,25 +47,38 @@ const parseSemester = semNode =>
 const parseSemesterList = semesterNodes =>
 	semesterNodes.map(parseSemester).reverse();
 
+const isThesisCourse = course => course.courseName === 'THESIS';
+
+const getCourseAttemptKey = course =>
+	isThesisCourse(course)
+		? `${course.code}::${course.courseDate}`
+		: `${course.code}::${course.courseName}`;
+
 const sanitizeSemesters = semesters => {
-	let courseGrades = {};
-	let coursesSeen = new Set();
+	const courseGrades = {};
+	const coursesSeen = new Set();
 
 	const storeFinalGrades = semester =>
-		semester.forEach(course => {if(course.courseName!=="THESIS"){courseGrades[course.code] = course.grade}else{
-			courseGrades[course.code+course.courseDate] = course.grade;
-		}});
+		semester.forEach(course => {
+			courseGrades[getCourseAttemptKey(course)] = course.grade;
+		});
 
 	semesters.forEach(storeFinalGrades);
 
-	const mutateCoursesWithImprovements = (course) =>{
-		if(course.courseName!=="THESIS"){
-		return coursesSeen.has(course.code)
-			? {}
-			: coursesSeen.add(course.code) && {
+	const mutateCoursesWithImprovements = course => {
+		if (!isThesisCourse(course)) {
+			const courseAttemptKey = getCourseAttemptKey(course);
+
+			return coursesSeen.has(courseAttemptKey)
+				? {}
+				: coursesSeen.add(courseAttemptKey) && {
 					...course,
-					grade: courseGrades[course.code],
-			  }} else return course; }; // Update the grades of first attempt for a course and empty the 'improvement' attempts
+					grade: courseGrades[courseAttemptKey],
+				};
+		}
+
+		return course;
+	}; // Update the grades of first attempt for a course and empty the 'improvement' attempts
 
 	const sanitizeSemester = semester => {
 		return semester
@@ -83,7 +95,6 @@ function calculateCGPA() {
 	let totalCredit = 0,
 		totalPoints = 0;
 
-	courseGrades = {};
 	const semesters = sanitizeSemesters(parseSemesterList(semesterNodes));
 
 	// Print processed data for programmers to inspect
@@ -112,7 +123,7 @@ function calculateCGPA() {
 		let semesterPoints=0;	
 		for(var i=0; i<semester.length; i++){
 			if(semester[i].courseName==="THESIS"){
-				gradeArray= semester[i].grade.split(' ');
+				const gradeArray= semester[i].grade.split(' ');
 				var thesisSum= gradeArray.reduce((sum,grade)=>sum+gradePointMap[grade]*6,0);
 				semesterPoints+=thesisSum;
 			}else{
@@ -132,7 +143,7 @@ function calculateCGPA() {
 			totalCredit += semesterCredit;
 			totalPoints += semesterPoints;
 		}
-		sgpa = round(semesterPoints / semesterCredit);
+		const sgpa = round(semesterPoints / semesterCredit);
 		sgpas.unshift(sgpa);
 	});
 
